@@ -1,19 +1,26 @@
 const path = require('path');
 const express = require('express');
+const bodyparser = require('body-parser');
+
 const app = express();
 
-const adminRoutes = require('./router/admin');
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+const admindata = require('./router/admin');
 const shopRoutes = require('./router/shop');
 
-const bodyparser = require('body-parser');
+
 
 app.use(bodyparser.urlencoded({ extended: false }))
 
-app.use('/admin', adminRoutes);   // we used here '/admin' because we have multiple js codes thats why we place file name as the path ,, to understand where it was came from
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.use('/admin', admindata.routers);   // we used here '/admin' because we have multiple js codes thats why we place file name as the path ,, to understand where it was came from
 app.use(shopRoutes);
 
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+    res.status(404).render('404',{Pagetitle:'ERROR'})
 });
 
 
